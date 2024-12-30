@@ -7,7 +7,7 @@ openrgb_path = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "assets", "OpenRGB.AppImage")
 )
 
-pip_dependencies = ["black"]
+pip_dependencies = ["black", "psutil", "pyinstaller", "PyQt5"]
 
 
 def install_pip_deps():

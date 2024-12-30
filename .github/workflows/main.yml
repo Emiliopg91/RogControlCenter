@@ -14,8 +14,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Install FUSE
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libfuse2
+
       - name: Get version
-        run: echo "VERSION=$(python3 script/version.py)" >> $GITHUB_ENV
+        run: echo "VERSION=$(python3 scripts/version.py)" >> $GITHUB_ENV
 
       - name: Build application
         env:
@@ -32,12 +37,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_ACTION_PAT }}
         run: |
-          VERSION=${{ env.version }}
+          VERSION=${{ env.VERSION }}
           git config --global user.email "actions@github.com"
           git config --global user.name "github-actions"
           git tag "$VERSION"
           git push origin "$VERSION"
-          NEW_VERSION=$(python3 scripts/version.py increase)
+          NEW_VERSION=$(python3 scripts/version.py)
           echo "Updating version from $VERSION to $NEW_VERSION"
           git add -u
           git reset -- .github/workflows/main.yml

@@ -73,13 +73,18 @@ fi
 
 
 def generate_appimage():
-    appimagetool = os.path.join(workspace_dir, "resources", "appimagetool")
+    appimagetool_path = os.path.join(workspace_dir, "resources", "appimagetool")
     cwd = os.getcwd()
     os.makedirs(dist_dir)
     try:
+        os.chmod(appimagetool_path, 0o755)
         os.chdir(output_dir)
         subprocess.run(
-            [appimagetool, ".", os.path.join(dist_dir, "RogControlCenter.AppImage")],
+            [
+                appimagetool_path,
+                output_dir,
+                os.path.join(dist_dir, "RogControlCenter.AppImage"),
+            ],
             check=True,
         )
     finally:
@@ -94,7 +99,7 @@ def package_python():
             "--distpath",
             os.path.join(output_dir, "usr", "bin"),
             "--add-data",
-            f"{os.path.join(workspace_dir, "assets")}:assets",
+            os.path.join(workspace_dir, "assets") + ":assets",
             os.path.join(workspace_dir, "main.py"),
         ]
     )
